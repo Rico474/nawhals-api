@@ -1,7 +1,15 @@
 import { createClient } from "@supabase/supabase-js";
 
 export default async function handler(req, res) {
-  console.log("Corps reçu :", req.body); // 👈 Ajouté pour debug
+  // 🔥 Ajouter les headers CORS pour TOUTES les méthodes
+  res.setHeader("Access-Control-Allow-Origin", "https://nawhals.com"); // autoriser uniquement ton domaine Shopify
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  // 🔥 Gérer la requête OPTIONS pour CORS preflight
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
 
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Méthode non autorisée" });
