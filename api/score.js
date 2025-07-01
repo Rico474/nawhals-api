@@ -1,6 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 
 export default async function handler(req, res) {
+  console.log("Corps reçu :", req.body); // 👈 Ajouté pour debug
+
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Méthode non autorisée" });
   }
