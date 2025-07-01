@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
-  process.env.SUPABASE_ANON_KEY!  // ⚠️ UTILISE LA CLÉ ANON
+  process.env.SUPABASE_ANON_KEY!  // ✅ Utilise bien la clé ANON
 );
 
 export async function OPTIONS() {
@@ -51,7 +51,4 @@ export async function GET() {
 }
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-};
+  "Access
