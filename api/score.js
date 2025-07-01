@@ -1,30 +1,36 @@
 import { createClient } from "@supabase/supabase-js";
 
 export default async function handler(req, res) {
-  // 🔥 Ajouter les headers CORS pour TOUTES les méthodes
-  res.setHeader("Access-Control-Allow-Origin", "https://nawhals.com"); // autoriser uniquement ton domaine Shopify
+  // 🔥 Ajoute les headers CORS pour autoriser Shopify à appeler ton API
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  // 🔥 Gérer la requête OPTIONS pour CORS preflight
+  // 🔥 Répondre immédiatement aux requêtes OPTIONS (pré-vol) du navigateur
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
 
+  // 🔥 Autorise seulement les requêtes POST
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Méthode non autorisée" });
   }
 
+  // 🔥 Récupère les données envoyées par le jeu
   const { firstname, lastname, email, time_in_seconds } = req.body;
 
+  // 🔥 Vérifie que toutes les infos sont là
   if (!firstname || !lastname || !email || !time_in_seconds) {
     return res.status(400).json({ error: "Paramètres manquants" });
   }
 
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  const supabase = createClient(supabaseUrl, supabaseKey);
+  // 🔥 Connecte-toi à Supabase avec tes clés
+  const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  );
 
+  // 🔥 Enregistre le score dans la table leaderboard
   const { error } = await supabase
     .from("leaderboard")
     .insert([{ firstname, lastname, email, time_in_seconds }]);
